@@ -7,7 +7,10 @@ public class Player : MonoBehaviour
     public Transform aimTarget; 
 
     float speed = 3f;
+    float force = 13;
+
     bool hitting;
+
 
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -38,5 +41,14 @@ public class Player : MonoBehaviour
         }
 
 
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.CompareTag("Ball"))
+        {
+            Vector3 direction=aimTarget.position-transform.position;
+            other.GetComponent<Rigidbody>().linearVelocity = direction.normalized * force +new Vector3(0,6,0);
+        }
     }
 }
