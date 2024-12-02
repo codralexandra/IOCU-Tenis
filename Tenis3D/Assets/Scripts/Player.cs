@@ -11,15 +11,14 @@ public class Player : MonoBehaviour
 
     bool hitting;
 
+    [SerializeField] Transform ball;
+    Animator animator;
 
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        
+        animator = GetComponent<Animator>();
     }
 
-    // Update is called once per frame
     void Update()
     {
         float h = Input.GetAxisRaw("Horizontal");
@@ -39,8 +38,6 @@ public class Player : MonoBehaviour
         {
             transform.Translate( new Vector3 (h, 0, v) * speed * Time.deltaTime );
         }
-
-
     }
 
     private void OnTriggerEnter(Collider other)
@@ -49,6 +46,12 @@ public class Player : MonoBehaviour
         {
             Vector3 direction=aimTarget.position-transform.position;
             other.GetComponent<Rigidbody>().linearVelocity = direction.normalized * force +new Vector3(0,6,0);
+            //Detect the direction of hit to play the correct animation
+            Vector3 ballDir = ball.position - transform.position;
+            if(ballDir.z >= 0)
+                animator.Play("forehand");
+            else
+                animator.Play("backhand");
         }
     }
 }

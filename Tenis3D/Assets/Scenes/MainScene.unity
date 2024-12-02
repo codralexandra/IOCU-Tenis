@@ -1651,15 +1651,15 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 817274214}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0.7071068, z: -0, w: 0.7071068}
-  m_LocalPosition: {x: 0, y: -2.472, z: 7.246001}
+  m_LocalRotation: {x: -0, y: -0.99998677, z: -0, w: -0.005156845}
+  m_LocalPosition: {x: -7.37, y: -2.472, z: -0.05}
   m_LocalScale: {x: 2, y: 2, z: 2}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 960637130}
   - {fileID: 480002258}
   m_Father: {fileID: 1638726991}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: -180.591, z: 0}
 --- !u!1 &944655415
 GameObject:
   m_ObjectHideFlags: 0
@@ -3087,6 +3087,28 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 4.3422537, y: 5.67, z: 1.0000002}
   m_Center: {x: -0, y: 1.838432, z: 0}
+--- !u!95 &1638727001
+Animator:
+  serializedVersion: 7
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1212634828}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 3b3fde6dabec8ad4d907e17d6264a360, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_StabilizeFeet: 0
+  m_AnimatePhysics: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorStateOnDisable: 0
+  m_WriteDefaultValuesOnDisable: 0
 --- !u!1 &1739697163
 GameObject:
   m_ObjectHideFlags: 0
@@ -3933,6 +3955,10 @@ PrefabInstance:
       value: Untagged
       objectReference: {fileID: 0}
     - target: {fileID: 1789839855267783906, guid: 90addc7acd6a8e149a955865a0a5a0a0, type: 3}
+      propertyPath: ball
+      value: 
+      objectReference: {fileID: 1889367968}
+    - target: {fileID: 1789839855267783906, guid: 90addc7acd6a8e149a955865a0a5a0a0, type: 3}
       propertyPath: aimTarget
       value: 
       objectReference: {fileID: 1308703787}
@@ -3987,6 +4013,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 384035023840848310, guid: 90addc7acd6a8e149a955865a0a5a0a0, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1638726996}
+    - targetCorrespondingSourceObject: {fileID: 384035023840848310, guid: 90addc7acd6a8e149a955865a0a5a0a0, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1638727001}
   m_SourcePrefab: {fileID: 100100000, guid: 90addc7acd6a8e149a955865a0a5a0a0, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
