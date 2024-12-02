@@ -1,57 +1,84 @@
-using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 
-public class Player : MonoBehaviour
+public class PlayerController : MonoBehaviour
 {
+    [SerializeField] private Transform aimTarget;
+    [SerializeField] private Transform ball;
 
-    public Transform aimTarget; 
+    private const float Speed = 3f;
+    private const float Force = 13f;
 
-    float speed = 3f;
-    float force = 13;
+    private bool isHitting;
+    private Animator animator;
 
-    bool hitting;
-
-    [SerializeField] Transform ball;
-    Animator animator;
-
-    void Start()
+    private void Start()
     {
         animator = GetComponent<Animator>();
     }
 
-    void Update()
+    private void Update()
     {
-        float h = Input.GetAxisRaw("Horizontal");
-        float v = Input.GetAxisRaw("Vertical");
+        HandleMovement();
+        HandleHitting();
+    }
 
-        if (Input.GetKeyDown(KeyCode.F))
-            hitting = true;
-        else if (Input.GetKeyUp(KeyCode.F))
-            hitting = false;
+    private void HandleMovement()
+    {
+        float horizontalInput = Input.GetAxisRaw("Horizontal");
+        float verticalInput = Input.GetAxisRaw("Vertical");
 
-        if (hitting)
+        if (isHitting)
         {
-            aimTarget.Translate(new Vector3(h, 0, 0) * speed * Time.deltaTime);
+            aimTarget.Translate(new Vector3(horizontalInput, 0, 0) * Speed * Time.deltaTime);
         }
-
-        if ( (h != 0 || v != 0) && !hitting )
+        else if (horizontalInput != 0 || verticalInput != 0)
         {
-            transform.Translate( new Vector3 (h, 0, v) * speed * Time.deltaTime );
+            Vector3 movement = new Vector3(horizontalInput, 0, verticalInput) * Speed * Time.deltaTime;
+            transform.Translate(movement);
+        }
+    }
+
+    private void HandleHitting()
+    {
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            isHitting = true;
+        }
+        else if (Input.GetKeyUp(KeyCode.F))
+        {
+            isHitting = false;
         }
     }
 
     private void OnTriggerEnter(Collider other)
     {
-        if(other.CompareTag("Ball"))
+        if (other.CompareTag("Ball"))
         {
-            Vector3 direction=aimTarget.position-transform.position;
-            other.GetComponent<Rigidbody>().linearVelocity = direction.normalized * force +new Vector3(0,6,0);
-            //Detect the direction of hit to play the correct animation
-            Vector3 ballDir = ball.position - transform.position;
-            if(ballDir.z >= 0)
-                animator.Play("forehand");
-            else
-                animator.Play("backhand");
+            HitBall(other);
+        }
+    }
+
+    private void HitBall(Collider ballCollider)
+    {
+        Vector3 hitDirection = aimTarget.position - transform.position;
+        Rigidbody ballRigidbody = ballCollider.GetComponent<Rigidbody>();
+
+        ballRigidbody.linearVelocity = hitDirection.normalized * Force + new Vector3(0, 6, 0);
+
+        PlayHitAnimation();
+    }
+
+    private void PlayHitAnimation()
+    {
+        Vector3 ballDirection = ball.position - transform.position;
+
+        if (ballDirection.z >= 0)
+        {
+            animator.Play("forehand");
+        }
+        else
+        {
+            animator.Play("backhand");
         }
     }
 }

@@ -1411,7 +1411,7 @@ GameObject:
   - component: {fileID: 794256434}
   - component: {fileID: 794256433}
   m_Layer: 0
-  m_Name: ground
+  m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2009,7 +2009,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1099157997}
   m_Layer: 0
-  m_Name: walls
+  m_Name: Walls
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2281,7 +2281,7 @@ GameObject:
   - component: {fileID: 1308703785}
   - component: {fileID: 1308703784}
   m_Layer: 0
-  m_Name: aimTarget
+  m_Name: AimTarget
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2928,7 +2928,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1613532675}
   m_Layer: 0
-  m_Name: net
+  m_Name: Net
   m_TagString: Wall
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3295,7 +3295,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1831277217}
   m_Layer: 0
-  m_Name: lamps
+  m_Name: Lamps
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3371,7 +3371,7 @@ GameObject:
   - component: {fileID: 1889367969}
   - component: {fileID: 1889367970}
   m_Layer: 0
-  m_Name: ball
+  m_Name: Ball
   m_TagString: Ball
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -3948,7 +3948,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 384035023840848310, guid: 90addc7acd6a8e149a955865a0a5a0a0, type: 3}
       propertyPath: m_Name
-      value: player
+      value: Player
       objectReference: {fileID: 0}
     - target: {fileID: 384035023840848310, guid: 90addc7acd6a8e149a955865a0a5a0a0, type: 3}
       propertyPath: m_TagString
