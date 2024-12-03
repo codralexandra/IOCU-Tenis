@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour
@@ -75,10 +76,12 @@ public class PlayerController : MonoBehaviour
         if (ballDirection.z >= 0)
         {
             animator.Play("forehand");
+            Console.WriteLine("Forehand");
         }
         else
         {
             animator.Play("backhand");
+            Console.WriteLine("Backhand");
         }
     }
 }
