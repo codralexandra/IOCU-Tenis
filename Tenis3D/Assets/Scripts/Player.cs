@@ -8,13 +8,19 @@ public class PlayerController : MonoBehaviour
 
     private const float Speed = 3f;
     private const float Force = 8.5f;
+    Vector3 aimTargetInitialPosition;
 
     private bool isHitting;
     private Animator animator;
+    ShotManager shotManager;
+    Shot currentShot;
 
     private void Start()
     {
         animator = GetComponent<Animator>();
+        aimTargetInitialPosition = aimTarget.position;
+        shotManager = GetComponent<ShotManager>();
+        currentShot = shotManager.topSpin;
     }
 
     private void Update()
@@ -44,8 +50,18 @@ public class PlayerController : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.F))
         {
             isHitting = true;
+            currentShot = shotManager.topSpin;
         }
         else if (Input.GetKeyUp(KeyCode.F))
+        {
+            isHitting = false;
+        }
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            isHitting = true;
+            currentShot = shotManager.flat;
+        }
+        else if (Input.GetKeyUp(KeyCode.E))
         {
             isHitting = false;
         }
@@ -64,7 +80,7 @@ public class PlayerController : MonoBehaviour
         Vector3 hitDirection = aimTarget.position - transform.position;
         Rigidbody ballRigidbody = ballCollider.GetComponent<Rigidbody>();
 
-        ballRigidbody.linearVelocity = hitDirection.normalized * Force + new Vector3(0, 5, 0);
+        ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
 
         PlayHitAnimation();
     }
