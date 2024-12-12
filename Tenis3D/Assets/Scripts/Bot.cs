@@ -42,7 +42,7 @@ public class Bot : MonoBehaviour
         Vector3 hitDirection = aimTarget.position - transform.position;
         Rigidbody ballRigidbody = ballCollider.GetComponent<Rigidbody>();
 
-        ballRigidbody.linearVelocity = hitDirection.normalized * Force + new Vector3(0, 6, 0);
+        ballRigidbody.linearVelocity = hitDirection.normalized * Force + new Vector3(0, 5, 0);
 
         PlayHitAnimation();
     }

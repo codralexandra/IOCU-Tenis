@@ -7,7 +7,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform ball;
 
     private const float Speed = 3f;
-    private const float Force = 13f;
+    private const float Force = 8.5f;
 
     private bool isHitting;
     private Animator animator;
@@ -30,7 +30,7 @@ public class PlayerController : MonoBehaviour
 
         if (isHitting)
         {
-            aimTarget.Translate(new Vector3(horizontalInput, 0, 0) * Speed * Time.deltaTime);
+            aimTarget.Translate(new Vector3(horizontalInput, 0, 0) * 2 * Speed * Time.deltaTime);
         }
         else if (horizontalInput != 0 || verticalInput != 0)
         {
@@ -64,7 +64,7 @@ public class PlayerController : MonoBehaviour
         Vector3 hitDirection = aimTarget.position - transform.position;
         Rigidbody ballRigidbody = ballCollider.GetComponent<Rigidbody>();
 
-        ballRigidbody.linearVelocity = hitDirection.normalized * Force + new Vector3(0, 6, 0);
+        ballRigidbody.linearVelocity = hitDirection.normalized * Force + new Vector3(0, 5, 0);
 
         PlayHitAnimation();
     }
