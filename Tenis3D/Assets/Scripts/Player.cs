@@ -65,6 +65,46 @@ public class PlayerController : MonoBehaviour
         {
             isHitting = false;
         }
+        if (Input.GetKeyDown(KeyCode.R))
+        {
+            isHitting = true;
+            currentShot = shotManager.flatServe;
+            GetComponent<BoxCollider>().enabled = false;
+            
+        }
+        else if (Input.GetKeyUp(KeyCode.R))
+        {
+            isHitting = false;
+            GetComponent<BoxCollider>().enabled = true;
+            ball.transform.position = transform.position + new Vector3(0.2f, 1, 0);
+
+            //luate din HitBall function 
+            Vector3 hitDirection = aimTarget.position - transform.position;
+            Rigidbody ballRigidbody = ball.GetComponent<Rigidbody>();
+
+            ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
+        }
+
+        if (Input.GetKeyDown(KeyCode.T))
+        {
+            isHitting = true;
+            currentShot = shotManager.kickServe;
+            GetComponent<BoxCollider>().enabled = false;
+
+        }
+        else if (Input.GetKeyUp(KeyCode.T))
+        {
+            isHitting = false;
+            GetComponent<BoxCollider>().enabled = true;
+            ball.transform.position = transform.position + new Vector3(0.2f, 1, 0);
+
+            //luate din HitBall function 
+            Vector3 hitDirection = aimTarget.position - transform.position;
+            Rigidbody ballRigidbody = ball.GetComponent<Rigidbody>();
+
+            ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
+        }
+
     }
 
     private void OnTriggerEnter(Collider other)

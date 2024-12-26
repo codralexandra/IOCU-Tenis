@@ -2039,6 +2039,12 @@ MonoBehaviour:
   flat:
     upForce: 3
     hitForce: 17
+  kickServe:
+    upForce: 2.5
+    hitForce: 14
+  flatServe:
+    upForce: 0.1
+    hitForce: 24
 --- !u!1 &1009459683
 GameObject:
   m_ObjectHideFlags: 0
@@ -4800,6 +4806,12 @@ MonoBehaviour:
   flat:
     upForce: 3
     hitForce: 10
+  kickServe:
+    upForce: 0
+    hitForce: 0
+  flatServe:
+    upForce: 0
+    hitForce: 0
 --- !u!1 &3630121369541104855
 GameObject:
   m_ObjectHideFlags: 0

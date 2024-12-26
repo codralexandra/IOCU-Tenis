@@ -11,4 +11,6 @@ public class ShotManager : MonoBehaviour
 {
     public Shot topSpin;
     public Shot flat;
+    public Shot kickServe;
+    public Shot flatServe;
 }
