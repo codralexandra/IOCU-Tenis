@@ -63,6 +63,9 @@ public class Bot : MonoBehaviour
         ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
 
         PlayHitAnimation();
+
+        ball.GetComponent<Ball>().hitter = "bot";
+
     }
 
     private void PlayHitAnimation()

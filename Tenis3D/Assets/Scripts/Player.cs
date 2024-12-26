@@ -15,6 +15,11 @@ public class PlayerController : MonoBehaviour
     ShotManager shotManager;
     Shot currentShot;
 
+    [SerializeField] Transform ServeRight;
+    [SerializeField] Transform ServeLeft;
+
+    bool servedRight = true;
+
     private void Start()
     {
         animator = GetComponent<Animator>();
@@ -70,19 +75,7 @@ public class PlayerController : MonoBehaviour
             isHitting = true;
             currentShot = shotManager.flatServe;
             GetComponent<BoxCollider>().enabled = false;
-            
-        }
-        else if (Input.GetKeyUp(KeyCode.R))
-        {
-            isHitting = false;
-            GetComponent<BoxCollider>().enabled = true;
-            ball.transform.position = transform.position + new Vector3(0.2f, 1, 0);
-
-            //luate din HitBall function 
-            Vector3 hitDirection = aimTarget.position - transform.position;
-            Rigidbody ballRigidbody = ball.GetComponent<Rigidbody>();
-
-            ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
+            animator.Play("serve-prepare");
         }
 
         if (Input.GetKeyDown(KeyCode.T))
@@ -90,9 +83,10 @@ public class PlayerController : MonoBehaviour
             isHitting = true;
             currentShot = shotManager.kickServe;
             GetComponent<BoxCollider>().enabled = false;
+            animator.Play("serve-prepare");
 
         }
-        else if (Input.GetKeyUp(KeyCode.T))
+        else if (Input.GetKeyUp(KeyCode.R) || Input.GetKeyUp(KeyCode.T))
         {
             isHitting = false;
             GetComponent<BoxCollider>().enabled = true;
@@ -103,6 +97,10 @@ public class PlayerController : MonoBehaviour
             Rigidbody ballRigidbody = ball.GetComponent<Rigidbody>();
 
             ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
+            animator.Play("serve");
+
+            ball.GetComponent<Ball>().hitter = "player";
+            ball.GetComponent<Ball>().playing = true;
         }
 
     }
@@ -123,6 +121,8 @@ public class PlayerController : MonoBehaviour
         ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
 
         PlayHitAnimation();
+
+        ball.GetComponent<Ball>().hitter = "player";
     }
 
     private void PlayHitAnimation()
@@ -139,5 +139,14 @@ public class PlayerController : MonoBehaviour
             animator.Play("backhand");
             Console.WriteLine("Backhand");
         }
+    }
+
+    public void Reset()
+    {
+        if (servedRight)
+            transform.position = ServeLeft.position;
+        else
+            transform.position = ServeRight.position;
+        servedRight = !servedRight;
     }
 }
