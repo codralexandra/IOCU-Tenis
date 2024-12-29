@@ -33,7 +33,6 @@ public class Ball : MonoBehaviour
         {
             GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
             GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-            //transform.position = initialPos;
 
             GameObject.Find("Player").GetComponent<PlayerController>().Reset();
 
@@ -67,7 +66,7 @@ public class Ball : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("out") && playing)
+        if (other.CompareTag("Out") && playing)
         {
             if (hitter == "player")
                 botScore++;
@@ -80,7 +79,8 @@ public class Ball : MonoBehaviour
 
     private void UpdateScores()
     {
-        playerScoreText.text = "Player: " + playerScore;
-        botScoreText.text = "Bot: " + botScore;
+        playerScoreText.text = playerScore.ToString();
+        botScoreText.text = botScore.ToString();
+        transform.position = initialPos;
     }
 }
