@@ -3,7 +3,7 @@ using UnityEngine;
 
 public class Bot : MonoBehaviour
 {
-
+    AudioManager audioManager;
     float speed = 50f;
     Animator animator;
     public Transform ball;
@@ -14,6 +14,12 @@ public class Bot : MonoBehaviour
     public Transform[] targets;
 
     ShotManager shotManager;
+
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
+
     void Start()
     {
         targetPosition = transform.position;
@@ -63,6 +69,7 @@ public class Bot : MonoBehaviour
         ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
 
         PlayHitAnimation();
+        audioManager.PlaySFX(audioManager.ballHit);
 
         ball.GetComponent<Ball>().hitter = "bot";
 

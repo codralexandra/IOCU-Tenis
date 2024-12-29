@@ -3,6 +3,8 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
+    AudioManager audioManager;
+
     [SerializeField] private Transform aimTarget;
     [SerializeField] private Transform ball;
 
@@ -19,6 +21,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField] Transform ServeLeft;
 
     bool servedRight = true;
+
+    private void Awake()
+    {
+        audioManager = GameObject.FindGameObjectWithTag("Audio").GetComponent<AudioManager>();
+    }
 
     private void Start()
     {
@@ -98,6 +105,7 @@ public class PlayerController : MonoBehaviour
 
             ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
             animator.Play("serve");
+            audioManager.PlaySFX(audioManager.ballHit);
 
             ball.GetComponent<Ball>().hitter = "player";
             ball.GetComponent<Ball>().playing = true;
@@ -121,6 +129,7 @@ public class PlayerController : MonoBehaviour
         ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
 
         PlayHitAnimation();
+        audioManager.PlaySFX(audioManager.ballHit);
 
         ball.GetComponent<Ball>().hitter = "player";
     }

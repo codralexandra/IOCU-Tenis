@@ -29,23 +29,7 @@ public class Ball : MonoBehaviour
     }
     private void OnCollisionEnter(Collision collision)
     {
-        if(collision.transform.CompareTag("Wall"))
-        {
-            GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
-            GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
-
-            GameObject.Find("Player").GetComponent<PlayerController>().Reset();
-
-            if (playing)
-            {
-                if (hitter == "player")
-                    playerScore++;
-                else if (hitter == "bot")
-                    botScore++;
-                playing = false;
-            }
-        }
-        else if (collision.transform.CompareTag("Out"))
+        if (collision.transform.CompareTag("Wall"))
         {
             GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
             GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
@@ -62,6 +46,23 @@ public class Ball : MonoBehaviour
                 UpdateScores();
             }
         }
+        else if (collision.transform.CompareTag("Net"))
+        {
+            GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
+            GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
+
+            GameObject.Find("Player").GetComponent<PlayerController>().Reset();
+
+            if (playing)
+            {
+                if (hitter == "player")
+                    botScore++;
+                else if (hitter == "bot")
+                    playerScore++;
+                playing = false;
+                UpdateScores();
+            }
+        }
     }
 
     private void OnTriggerEnter(Collider other)
@@ -69,9 +70,9 @@ public class Ball : MonoBehaviour
         if (other.CompareTag("Out") && playing)
         {
             if (hitter == "player")
-                botScore++;
-            else if (hitter == "bot")
                 playerScore++;
+            else if (hitter == "bot")
+                botScore++;
             playing = false;
             UpdateScores();
         }
@@ -81,6 +82,6 @@ public class Ball : MonoBehaviour
     {
         playerScoreText.text = playerScore.ToString();
         botScoreText.text = botScore.ToString();
-        transform.position = initialPos;
+        //transform.position = initialPos;
     }
 }
