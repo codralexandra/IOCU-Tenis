@@ -14,6 +14,9 @@ public class Ball : MonoBehaviour
     [SerializeField] public TextMeshProUGUI playerScoreText;
     [SerializeField] public TextMeshProUGUI botScoreText;
 
+    [SerializeField] public ParticleSystem particleSystem1;
+    [SerializeField] public ParticleSystem particleSystem2;
+
     public bool playing = true;
 
     void Start()
@@ -23,10 +26,17 @@ public class Ball : MonoBehaviour
         botScore = 0;
     }
 
-    void Update()
-    {
+    //void Update()
+    //{
         
+    //}
+
+    public void TriggerConfettiParticles()
+    {
+        particleSystem1.Play();
+        particleSystem2.Play();
     }
+
     private void OnCollisionEnter(Collision collision)
     {
         if (collision.transform.CompareTag("Wall"))
@@ -60,6 +70,7 @@ public class Ball : MonoBehaviour
                 else if (hitter == "bot")
                     playerScore++;
                 playing = false;
+                TriggerConfettiParticles();
                 UpdateScores();
             }
         }
@@ -74,6 +85,7 @@ public class Ball : MonoBehaviour
             else if (hitter == "bot")
                 botScore++;
             playing = false;
+            TriggerConfettiParticles();
             UpdateScores();
         }
     }
@@ -82,6 +94,6 @@ public class Ball : MonoBehaviour
     {
         playerScoreText.text = playerScore.ToString();
         botScoreText.text = botScore.ToString();
-        //transform.position = initialPos;
+        transform.position = initialPos;
     }
 }
