@@ -676,13 +676,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 258971528}
   serializedVersion: 2
-  m_LocalRotation: {x: 0.11844042, y: 0.69711685, z: -0.11844042, w: 0.69711685}
-  m_LocalPosition: {x: -11, y: 5, z: 0}
+  m_LocalRotation: {x: 0.083461106, y: -0.0064258277, z: 0.00053820014, w: 0.99649024}
+  m_LocalPosition: {x: 0.01, y: 1.8, z: -2.1}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
-  m_LocalEulerAnglesHint: {x: 19.285, y: 90, z: 0}
+  m_Father: {fileID: 993644706}
+  m_LocalEulerAnglesHint: {x: 9.575, y: -0.739, z: 0}
 --- !u!114 &258971532
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2016,7 +2016,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 3278883554580211484, guid: 1a7b05af2614aac4381f64b7afbae6d4, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 258971531}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 2795397902362475942, guid: 1a7b05af2614aac4381f64b7afbae6d4, type: 3}
       insertIndex: -1
@@ -2037,6 +2040,11 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 201953571}
   m_SourcePrefab: {fileID: 100100000, guid: 1a7b05af2614aac4381f64b7afbae6d4, type: 3}
+--- !u!4 &993644706 stripped
+Transform:
+  m_CorrespondingSourceObject: {fileID: 3278883554580211484, guid: 1a7b05af2614aac4381f64b7afbae6d4, type: 3}
+  m_PrefabInstance: {fileID: 993644705}
+  m_PrefabAsset: {fileID: 0}
 --- !u!65 &993644707
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -2388,7 +2396,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -914, y: -104}
+  m_AnchoredPosition: {x: -924, y: -104}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1019215637
@@ -2909,7 +2917,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 1, y: 1}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -833, y: -102}
+  m_AnchoredPosition: {x: -843, y: -102}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1305947565
@@ -4750,7 +4758,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 1}
   m_AnchorMax: {x: 0.5, y: 1}
-  m_AnchoredPosition: {x: -39, y: -104}
+  m_AnchoredPosition: {x: -49, y: -104}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1955903417
@@ -5850,7 +5858,6 @@ SkinnedMeshRenderer:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 258971531}
   - {fileID: 1293344122}
   - {fileID: 794256436}
   - {fileID: 1099157997}
