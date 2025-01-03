@@ -59,58 +59,34 @@ public class PlayerController : MonoBehaviour
 
     private void HandleHitting()
     {
-        if (Input.GetKeyDown(KeyCode.F))
+        Ball ballScript = ball.GetComponent<Ball>();
+        if (ballScript.currentServer == "player")
         {
-            isHitting = true;
-            currentShot = shotManager.topSpin;
-        }
-        else if (Input.GetKeyUp(KeyCode.F))
-        {
-            isHitting = false;
-        }
-        if (Input.GetKeyDown(KeyCode.E))
-        {
-            isHitting = true;
-            currentShot = shotManager.flat;
-        }
-        else if (Input.GetKeyUp(KeyCode.E))
-        {
-            isHitting = false;
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {
-            isHitting = true;
-            currentShot = shotManager.flatServe;
-            GetComponent<BoxCollider>().enabled = false;
-            animator.Play("serve-prepare");
-        }
+            if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.T))
+            {
+                isHitting = true;
+                currentShot = Input.GetKeyDown(KeyCode.R) ? shotManager.flatServe : shotManager.kickServe;
+                GetComponent<BoxCollider>().enabled = false;
+                animator.Play("serve-prepare");
+            }
 
-        if (Input.GetKeyDown(KeyCode.T))
-        {
-            isHitting = true;
-            currentShot = shotManager.kickServe;
-            GetComponent<BoxCollider>().enabled = false;
-            animator.Play("serve-prepare");
+            if (Input.GetKeyUp(KeyCode.R) || Input.GetKeyUp(KeyCode.T))
+            {
+                isHitting = false;
+                GetComponent<BoxCollider>().enabled = true;
+                ball.transform.position = transform.position + new Vector3(0.2f, 1, 0);
 
+                Vector3 hitDirection = aimTarget.position - transform.position;
+                Rigidbody ballRigidbody = ball.GetComponent<Rigidbody>();
+
+                ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
+                animator.Play("serve");
+                audioManager.PlaySFX(audioManager.ballHit);
+
+                ball.GetComponent<Ball>().hitter = "player";
+                ball.GetComponent<Ball>().playing = true;
+            }
         }
-        else if (Input.GetKeyUp(KeyCode.R) || Input.GetKeyUp(KeyCode.T))
-        {
-            isHitting = false;
-            GetComponent<BoxCollider>().enabled = true;
-            ball.transform.position = transform.position + new Vector3(0.2f, 1, 0);
-
-            //luate din HitBall function 
-            Vector3 hitDirection = aimTarget.position - transform.position;
-            Rigidbody ballRigidbody = ball.GetComponent<Rigidbody>();
-
-            ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
-            animator.Play("serve");
-            audioManager.PlaySFX(audioManager.ballHit);
-
-            ball.GetComponent<Ball>().hitter = "player";
-            ball.GetComponent<Ball>().playing = true;
-        }
-
     }
 
     private void OnTriggerEnter(Collider other)
@@ -141,21 +117,20 @@ public class PlayerController : MonoBehaviour
         if (ballDirection.z >= 0)
         {
             animator.Play("forehand");
-            Console.WriteLine("Forehand");
         }
         else
         {
             animator.Play("backhand");
-            Console.WriteLine("Backhand");
         }
     }
 
-    public void Reset()
+    public void ResetForServe()
     {
-        if (servedRight)
-            transform.position = ServeLeft.position;
-        else
-            transform.position = ServeRight.position;
-        servedRight = !servedRight;
+        if (ball.GetComponent<Ball>().currentServer == "player")
+        {
+            transform.position = servedRight ? ServeRight.position : ServeLeft.position;
+            servedRight = !servedRight;
+        }
     }
+
 }

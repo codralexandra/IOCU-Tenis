@@ -30,6 +30,7 @@ public class Bot : MonoBehaviour
     void Update()
     {
         Move();
+        HandleServe();
     }
 
     void Move()
@@ -37,10 +38,20 @@ public class Bot : MonoBehaviour
         targetPosition.z = ball.position.z;
         transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
     }
-    
+
+    void HandleServe()
+    {
+        Ball ballScript = ball.GetComponent<Ball>();
+        if (ballScript.currentServer == "bot" && !ballScript.playing)
+        {
+            HitBall(ball.GetComponent<Collider>());
+            ballScript.playing = true;
+        }
+    }
+
     Vector3 PickTarget()
     {
-        int randomValue = UnityEngine.Random.Range(0, targets.Length-1);
+        int randomValue = UnityEngine.Random.Range(0, targets.Length - 1);
         return targets[randomValue].position;
     }
 
@@ -49,8 +60,10 @@ public class Bot : MonoBehaviour
         int randomValue = UnityEngine.Random.Range(0, 2);
         if (randomValue == 0)
             return shotManager.topSpin;
-        else return shotManager.flat;
+        else
+            return shotManager.flat;
     }
+
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Ball"))
@@ -72,7 +85,6 @@ public class Bot : MonoBehaviour
         audioManager.PlaySFX(audioManager.ballHit);
 
         ball.GetComponent<Ball>().hitter = "bot";
-
     }
 
     private void PlayHitAnimation()
@@ -82,12 +94,19 @@ public class Bot : MonoBehaviour
         if (ballDirection.z >= 0)
         {
             animator.Play("forehand");
-            Console.WriteLine("Forehand");
         }
         else
         {
             animator.Play("backhand");
-            Console.WriteLine("Backhand");
         }
     }
+    public void ResetForServe()
+    {
+        if (ball.GetComponent<Ball>().currentServer == "bot")
+        {
+            transform.position = new Vector3(6.91f, 0.717f, -0.39f);
+        }
+    }
+
+
 }
