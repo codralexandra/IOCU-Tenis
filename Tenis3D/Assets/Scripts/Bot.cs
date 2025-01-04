@@ -10,10 +10,9 @@ public class Bot : MonoBehaviour
     public Transform aimTarget;
     Vector3 targetPosition;
     private const float Force = 8.5f;
-
     public Transform[] targets;
-
     ShotManager shotManager;
+    private bool isServing = false;
 
     private void Awake()
     {
@@ -30,28 +29,61 @@ public class Bot : MonoBehaviour
     void Update()
     {
         Move();
-        HandleServe();
     }
 
     void Move()
     {
-        targetPosition.z = ball.position.z;
-        transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+        if (!isServing)
+        {
+            targetPosition.z = ball.position.z;
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed * Time.deltaTime);
+        }
     }
 
-    void HandleServe()
+    public void HandleServe()
     {
         Ball ballScript = ball.GetComponent<Ball>();
         if (ballScript.currentServer == "bot" && !ballScript.playing)
         {
-            HitBall(ball.GetComponent<Collider>());
-            ballScript.playing = true;
+            
+            StartServe();
+            // Add small delay before executing serve
+            Invoke("ExecuteServe", 1.0f);
         }
     }
 
+    private void StartServe()
+    {
+        ResetForServe();
+        isServing = true;
+        animator.Play("serve-prepare");
+    }
+
+    private void ExecuteServe()
+    {
+        Shot serveShot = (UnityEngine.Random.value > 0.5f) ? shotManager.flatServe : shotManager.kickServe;
+
+        // Use the new centralized method
+        ball.GetComponent<Ball>().PositionForServe(transform.position, true);
+
+        Vector3 serveTarget = PickTarget();
+        Vector3 hitDirection = serveTarget - transform.position;
+
+        Rigidbody ballRigidbody = ball.GetComponent<Rigidbody>();
+        ballRigidbody.linearVelocity = hitDirection.normalized * serveShot.hitForce + new Vector3(0, serveShot.upForce, 0);
+
+        animator.Play("serve");
+        audioManager.PlaySFX(audioManager.ballHit);
+
+        Ball ballScript = ball.GetComponent<Ball>();
+        ballScript.hitter = "bot";
+        ballScript.playing = true;
+
+        isServing = false;
+    }
     Vector3 PickTarget()
     {
-        int randomValue = UnityEngine.Random.Range(0, targets.Length - 1);
+        int randomValue = UnityEngine.Random.Range(0, targets.Length);
         return targets[randomValue].position;
     }
 
@@ -66,7 +98,7 @@ public class Bot : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.CompareTag("Ball"))
+        if (other.CompareTag("Ball") && !isServing)
         {
             HitBall(other);
         }
@@ -75,38 +107,34 @@ public class Bot : MonoBehaviour
     private void HitBall(Collider ballCollider)
     {
         Shot currentShot = PickShot();
-
         Vector3 hitDirection = PickTarget() - transform.position;
         Rigidbody ballRigidbody = ballCollider.GetComponent<Rigidbody>();
-
         ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
-
         PlayHitAnimation();
         audioManager.PlaySFX(audioManager.ballHit);
-
         ball.GetComponent<Ball>().hitter = "bot";
     }
 
     private void PlayHitAnimation()
     {
         Vector3 ballDirection = ball.position - transform.position;
-
         if (ballDirection.z >= 0)
-        {
-            animator.Play("forehand");
-        }
-        else
         {
             animator.Play("backhand");
         }
+        else
+        {
+            animator.Play("forehand");
+        }
     }
+
     public void ResetForServe()
     {
         if (ball.GetComponent<Ball>().currentServer == "bot")
         {
             transform.position = new Vector3(6.91f, 0.717f, -0.39f);
+            isServing = false;
         }
+        
     }
-
-
 }

@@ -39,6 +39,7 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
         HandleHitting();
+        HandleBotServe();
     }
 
     private void HandleMovement()
@@ -48,7 +49,9 @@ public class PlayerController : MonoBehaviour
 
         if (isHitting)
         {
-            aimTarget.Translate(new Vector3(horizontalInput, 0, 0) * 2 * Speed * Time.deltaTime);
+            // Allow both horizontal and vertical movement of aim target while hitting
+            Vector3 aimMovement = new Vector3(horizontalInput, 0, verticalInput) * 2 * Speed * Time.deltaTime;
+            aimTarget.Translate(aimMovement);
         }
         else if (horizontalInput != 0 || verticalInput != 0)
         {
@@ -60,6 +63,37 @@ public class PlayerController : MonoBehaviour
     private void HandleHitting()
     {
         Ball ballScript = ball.GetComponent<Ball>();
+
+        // Regular hitting controls (E and F)
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            isHitting = true;
+            currentShot = shotManager.topSpin;
+        }
+        else if (Input.GetKeyUp(KeyCode.F))
+        {
+            isHitting = false;
+            if (ballScript.playing)
+            {
+                ExecuteHit();
+            }
+        }
+
+        if (Input.GetKeyDown(KeyCode.E))
+        {
+            isHitting = true;
+            currentShot = shotManager.flat;
+        }
+        else if (Input.GetKeyUp(KeyCode.E))
+        {
+            isHitting = false;
+            if (ballScript.playing)
+            {
+                ExecuteHit();
+            }
+        }
+
+        // Serving controls (R and T)
         if (ballScript.currentServer == "player")
         {
             if (Input.GetKeyDown(KeyCode.R) || Input.GetKeyDown(KeyCode.T))
@@ -74,19 +108,49 @@ public class PlayerController : MonoBehaviour
             {
                 isHitting = false;
                 GetComponent<BoxCollider>().enabled = true;
-                ball.transform.position = transform.position + new Vector3(0.2f, 1, 0);
-
-                Vector3 hitDirection = aimTarget.position - transform.position;
-                Rigidbody ballRigidbody = ball.GetComponent<Rigidbody>();
-
-                ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
-                animator.Play("serve");
-                audioManager.PlaySFX(audioManager.ballHit);
-
-                ball.GetComponent<Ball>().hitter = "player";
-                ball.GetComponent<Ball>().playing = true;
+                ExecuteServe();
             }
         }
+    }
+
+    private void HandleBotServe()
+    {
+        Ball ballScript = ball.GetComponent<Ball>();
+
+        // Trigger bot serve with B key
+        if (ballScript.currentServer == "bot" && Input.GetKeyDown(KeyCode.B))
+        {
+            GameObject.Find("Bot").GetComponent<Bot>().HandleServe();
+            ballScript.playing = true;
+        }
+    }
+
+    private void ExecuteHit()
+    {
+        Vector3 hitDirection = aimTarget.position - transform.position;
+        Rigidbody ballRigidbody = ball.GetComponent<Rigidbody>();
+
+        ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
+        PlayHitAnimation();
+        audioManager.PlaySFX(audioManager.ballHit);
+        ball.GetComponent<Ball>().hitter = "player";
+    }
+
+    private void ExecuteServe()
+    {
+        // Use the new centralized method
+        ball.GetComponent<Ball>().PositionForServe(transform.position, false);
+
+        ResetForServe();
+        Vector3 hitDirection = aimTarget.position - transform.position;
+        Rigidbody ballRigidbody = ball.GetComponent<Rigidbody>();
+
+        ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
+        animator.Play("serve");
+        audioManager.PlaySFX(audioManager.ballHit);
+
+        ball.GetComponent<Ball>().hitter = "player";
+        ball.GetComponent<Ball>().playing = true;
     }
 
     private void OnTriggerEnter(Collider other)
@@ -132,5 +196,4 @@ public class PlayerController : MonoBehaviour
             servedRight = !servedRight;
         }
     }
-
 }
