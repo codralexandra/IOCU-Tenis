@@ -13,6 +13,7 @@ public class Bot : MonoBehaviour
     public Transform[] targets;
     ShotManager shotManager;
     private bool isServing = false;
+    private bool waitingToServe = false;
 
     private void Awake()
     {
@@ -29,6 +30,7 @@ public class Bot : MonoBehaviour
     void Update()
     {
         Move();
+        CheckForServe();
     }
 
     void Move()
@@ -40,12 +42,22 @@ public class Bot : MonoBehaviour
         }
     }
 
+    private void CheckForServe()
+    {
+        Ball ballScript = ball.GetComponent<Ball>();
+        if (ballScript.currentServer == "bot" && !ballScript.playing && !waitingToServe && !isServing)
+        {
+            waitingToServe = true;
+            // Start serve sequence after 2 seconds
+            Invoke("HandleServe", 2f);
+            Debug.Log("Bot serve");
+        }
+    }
     public void HandleServe()
     {
         Ball ballScript = ball.GetComponent<Ball>();
         if (ballScript.currentServer == "bot" && !ballScript.playing)
         {
-            
             StartServe();
             // Add small delay before executing serve
             Invoke("ExecuteServe", 1.0f);
@@ -57,6 +69,7 @@ public class Bot : MonoBehaviour
         ResetForServe();
         isServing = true;
         animator.Play("serve-prepare");
+        Debug.Log("Serve prepare");
     }
 
     private void ExecuteServe()
@@ -106,10 +119,18 @@ public class Bot : MonoBehaviour
 
     private void HitBall(Collider ballCollider)
     {
+        Ball ballScript = ball.GetComponent<Ball>();
+
+        // Reset terrain hits
+        Debug.Log("Reset terrain hits");
+        ballScript.hitPlayerTerrain = false;
+        ballScript.hitBotTerrain = false;
+
         Shot currentShot = PickShot();
         Vector3 hitDirection = PickTarget() - transform.position;
         Rigidbody ballRigidbody = ballCollider.GetComponent<Rigidbody>();
         ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
+        Debug.Log("Bot hit");
         PlayHitAnimation();
         audioManager.PlaySFX(audioManager.ballHit);
         ball.GetComponent<Ball>().hitter = "bot";

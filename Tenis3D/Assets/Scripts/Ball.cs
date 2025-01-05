@@ -5,6 +5,7 @@ public class Ball : MonoBehaviour
 {
     Vector3 initialPos;
     public string hitter;
+    public string winner;
     int playerScore;
     int botScore;
     [SerializeField] public TextMeshProUGUI playerScoreText;
@@ -15,6 +16,8 @@ public class Ball : MonoBehaviour
     private TrailRenderer trailRenderer; // Reference to the trail renderer
     public bool playing = true;
 
+    public bool hitPlayerTerrain = false;
+    public bool hitBotTerrain = false;
     void Start()
     {
         initialPos = transform.position;
@@ -31,60 +34,121 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        if (collision.transform.CompareTag("Wall"))
+        // Check for terrain hits first
+        if (collision.transform.CompareTag("PlayerTerrain"))
         {
+            hitPlayerTerrain = true;
+        }
+        else if (collision.transform.CompareTag("BotTerrain"))
+        {
+            hitBotTerrain = true;
+        }
+        // Wall hits
+        else if (collision.transform.CompareTag("Wall"))
+        {
+            Debug.Log("wall");
             ResetBall();
             if (playing)
             {
-                if (hitter == "player")
+                // Award point to hitter if ball hit the correct terrain first
+                if (hitter == "player" && hitBotTerrain)
+                {
                     playerScore++;
-                else if (hitter == "bot")
+                    winner = hitter;
+                    
+                }
+                else if (hitter == "bot" && hitPlayerTerrain)
+                {
                     botScore++;
+                    winner = hitter;
+                }
+                // If ball didn't hit correct terrain, point goes to opponent
+                else if (hitter == "player" && !hitBotTerrain)
+                {
+                    botScore++;
+                    winner = "bot";
+                }
+                else if (hitter == "bot" && !hitPlayerTerrain)
+                {
+                    playerScore++;
+                    winner = "player";
+                }
                 playing = false;
                 UpdateScores();
             }
         }
         else if (collision.transform.CompareTag("Net"))
         {
+            Debug.Log("Net");
             ResetBall();
             if (playing)
             {
                 if (hitter == "player")
+                {
                     botScore++;
+                    winner = "bot";
+                }
                 else if (hitter == "bot")
+                {
                     playerScore++;
+                    winner = "player";
+                }
                 playing = false;
                 TriggerConfettiParticles();
                 UpdateScores();
             }
         }
+        Debug.Log(winner);
     }
 
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Out") && playing)
         {
-            if (hitter == "player")
+            Debug.Log("Out");
+            // Award point to hitter if ball hit the correct terrain first
+            if (hitter == "player" && hitBotTerrain)
+            {
                 playerScore++;
-            else if (hitter == "bot")
+                winner = hitter;
+            }
+            else if (hitter == "bot" && hitPlayerTerrain)
+            {
                 botScore++;
+                winner = hitter;
+            }
+            // If ball didn't hit correct terrain, point goes to opponent
+            else if (hitter == "player" && !hitBotTerrain)
+            {
+                botScore++;
+                winner = "bot";
+            }
+            else if (hitter == "bot" && !hitPlayerTerrain)
+            {
+                playerScore++;
+                winner = "player";
+            }
+            hitBotTerrain = false;
+            hitPlayerTerrain = false;
             playing = false;
             TriggerConfettiParticles();
             UpdateScores();
+            Debug.Log(winner);
         }
     }
-
     private void UpdateScores()
     {
         playerScoreText.text = playerScore.ToString();
         botScoreText.text = botScore.ToString();
-        currentServer = hitter;
+        currentServer = winner;
+        Debug.Log("Point to " + winner.ToString());
     }
 
     private void ResetBall()
     {
         // Disable trail before resetting position
-        
+        Debug.Log("Ball reset");
+
         GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
         GameObject.Find("Player").GetComponent<PlayerController>().ResetForServe();

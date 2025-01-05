@@ -39,7 +39,7 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
         HandleHitting();
-        HandleBotServe();
+        
     }
 
     private void HandleMovement()
@@ -113,23 +113,16 @@ public class PlayerController : MonoBehaviour
         }
     }
 
-    private void HandleBotServe()
-    {
-        Ball ballScript = ball.GetComponent<Ball>();
-
-        // Trigger bot serve with B key
-        if (ballScript.currentServer == "bot" && Input.GetKeyDown(KeyCode.B))
-        {
-            GameObject.Find("Bot").GetComponent<Bot>().HandleServe();
-            ballScript.playing = true;
-        }
-    }
 
     private void ExecuteHit()
     {
         Vector3 hitDirection = aimTarget.position - transform.position;
         Rigidbody ballRigidbody = ball.GetComponent<Rigidbody>();
+        Ball ballScript = ball.GetComponent<Ball>();
 
+        
+        ballScript.hitPlayerTerrain = false;
+        ballScript.hitBotTerrain = false;
         ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
         PlayHitAnimation();
         audioManager.PlaySFX(audioManager.ballHit);
@@ -165,7 +158,10 @@ public class PlayerController : MonoBehaviour
     {
         Vector3 hitDirection = aimTarget.position - transform.position;
         Rigidbody ballRigidbody = ballCollider.GetComponent<Rigidbody>();
+        Ball ballScript = ball.GetComponent<Ball>();
 
+        ballScript.hitPlayerTerrain = false;
+        ballScript.hitBotTerrain = false;
         ballRigidbody.linearVelocity = hitDirection.normalized * currentShot.hitForce + new Vector3(0, currentShot.upForce, 0);
 
         PlayHitAnimation();
