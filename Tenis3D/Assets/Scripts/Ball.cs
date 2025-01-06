@@ -8,6 +8,7 @@ public class Ball : MonoBehaviour
     public string winner;
     int playerScore;
     int botScore;
+    int maxScore = 10;
     [SerializeField] public TextMeshProUGUI playerScoreText;
     [SerializeField] public TextMeshProUGUI botScoreText;
     [SerializeField] public ParticleSystem particleSystem1;
@@ -18,6 +19,8 @@ public class Ball : MonoBehaviour
 
     public bool hitPlayerTerrain = false;
     public bool hitBotTerrain = false;
+
+    public GameObject endMenuUI;
     void Start()
     {
         initialPos = transform.position;
@@ -142,6 +145,11 @@ public class Ball : MonoBehaviour
         botScoreText.text = botScore.ToString();
         currentServer = winner;
         Debug.Log("Point to " + winner.ToString());
+        if(playerScore == maxScore || botScore == maxScore)
+        {
+            endMenuUI.SetActive(true);
+            Debug.Log("Game ended");
+        }
     }
 
     private void ResetBall()
