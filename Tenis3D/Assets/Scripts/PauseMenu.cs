@@ -1,10 +1,30 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 
 public class PauseMenu : MonoBehaviour
 {
     public static bool GameIsPaused = false;
     public GameObject pauseMenuUI;
+
+    public Slider musicSlider;
+    public Slider sfxSlider;
+
+    private AudioManager audioManager;
+
+    private void Start()
+    {
+        audioManager = Object.FindFirstObjectByType<AudioManager>();
+
+        if (audioManager != null)
+        {
+            musicSlider.value = audioManager.musicSource.volume;
+            sfxSlider.value = audioManager.SFXSource.volume;
+        }
+
+        musicSlider.onValueChanged.AddListener(SetMusicVolume);
+        sfxSlider.onValueChanged.AddListener(SetSFXVolume);
+    }
 
     void Update()
     {
@@ -44,5 +64,21 @@ public class PauseMenu : MonoBehaviour
     {
         Debug.Log("Quitting game...");
         Application.Quit();
+    }
+
+    void SetMusicVolume(float volume)
+    {
+        if (audioManager != null)
+        {
+            audioManager.SetMusicVolume(volume);
+        }
+    }
+
+    void SetSFXVolume(float volume)
+    {
+        if (audioManager != null)
+        {
+            audioManager.SetSFXVolume(volume);
+        }
     }
 }
