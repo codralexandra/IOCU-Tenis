@@ -12,6 +12,8 @@ public class PlayerController : MonoBehaviour
     private const float Force = 8.5f;
     Vector3 aimTargetInitialPosition;
 
+    public bool isGameOn;
+
     private bool isHitting;
     private Animator animator;
     ShotManager shotManager;
@@ -29,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
     private void Start()
     {
+        isGameOn = true;
         animator = GetComponent<Animator>();
         aimTargetInitialPosition = aimTarget.position;
         shotManager = GetComponent<ShotManager>();
@@ -37,8 +40,11 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        HandleMovement();
-        HandleHitting();
+        if (isGameOn)
+        {
+            HandleMovement();
+            HandleHitting();
+        }
     }
 
     private void HandleMovement()

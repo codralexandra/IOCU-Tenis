@@ -153,6 +153,7 @@ public class Ball : MonoBehaviour
         Debug.Log("Scores updated!");
         if(playerScore == maxScore || botScore == maxScore)
         {
+            GameObject.Find("Player").GetComponent<PlayerController>().isGameOn = false;
             endMenuUI.SetActive(true);
             Debug.Log("Game ended");
         }
