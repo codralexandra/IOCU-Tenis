@@ -39,7 +39,6 @@ public class PlayerController : MonoBehaviour
     {
         HandleMovement();
         HandleHitting();
-        
     }
 
     private void HandleMovement()
@@ -127,6 +126,7 @@ public class PlayerController : MonoBehaviour
         PlayHitAnimation();
         audioManager.PlaySFX(audioManager.ballHit);
         ball.GetComponent<Ball>().hitter = "player";
+        Debug.Log("Player hit ball");
     }
 
     private void ExecuteServe()
@@ -144,6 +144,7 @@ public class PlayerController : MonoBehaviour
 
         ball.GetComponent<Ball>().hitter = "player";
         ball.GetComponent<Ball>().playing = true;
+        Debug.Log("Player served");
     }
 
     private void OnTriggerEnter(Collider other)
@@ -190,6 +191,7 @@ public class PlayerController : MonoBehaviour
         {
             transform.position = servedRight ? ServeRight.position : ServeLeft.position;
             servedRight = !servedRight;
+            Debug.Log("Player position reset for serve");
         }
     }
 }
