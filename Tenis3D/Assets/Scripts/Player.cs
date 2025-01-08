@@ -11,7 +11,7 @@ public class PlayerController : MonoBehaviour
     private const float Speed = 3f;
     private const float Force = 8.5f;
     Vector3 aimTargetInitialPosition;
-
+    private bool ballInRange;
     public bool isGameOn;
 
     private bool isHitting;
@@ -52,18 +52,21 @@ public class PlayerController : MonoBehaviour
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
 
-        if (isHitting)
+        if (horizontalInput != 0 || verticalInput != 0)
         {
-            // Allow both horizontal and vertical movement of aim target while hitting
-            Vector3 aimMovement = new Vector3(horizontalInput, 0, verticalInput) * 2 * Speed * Time.deltaTime;
-            aimTarget.Translate(aimMovement);
-        }
-        else if (horizontalInput != 0 || verticalInput != 0)
-        {
+
             Vector3 movement = new Vector3(horizontalInput, 0, verticalInput) * Speed * Time.deltaTime;
             transform.Translate(movement);
+
+            if (isHitting)
+            {
+                // Allow aim target movement while hitting
+                Vector3 aimMovement = new Vector3(horizontalInput, 0, verticalInput) * 2 * Speed * Time.deltaTime;
+                aimTarget.Translate(aimMovement);
+            }
         }
     }
+
 
     private void HandleHitting()
     {
@@ -78,7 +81,7 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKeyUp(KeyCode.F))
         {
             isHitting = false;
-            if (ballScript.playing)
+            if (ballScript.playing&&ballInRange)
             {
                 ExecuteHit();
             }
@@ -92,7 +95,7 @@ public class PlayerController : MonoBehaviour
         else if (Input.GetKeyUp(KeyCode.E))
         {
             isHitting = false;
-            if (ballScript.playing)
+            if (ballScript.playing && ballInRange)
             {
                 ExecuteHit();
             }
@@ -157,9 +160,19 @@ public class PlayerController : MonoBehaviour
     {
         if (other.CompareTag("Ball"))
         {
+            ballInRange = true;
             HitBall(other);
         }
     }
+    private void OnTriggerExit(Collider other)
+    {
+        if (other.CompareTag("Ball"))
+        {
+            ballInRange = false;
+            Debug.Log("Ball left range.");
+        }
+    }
+
 
     private void HitBall(Collider ballCollider)
     {
