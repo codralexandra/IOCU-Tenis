@@ -8,7 +8,7 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private Transform aimTarget;
     [SerializeField] private Transform ball;
 
-    private const float Speed = 3f;
+    private const float Speed = 5f;
     private const float Force = 8.5f;
     Vector3 aimTargetInitialPosition;
     private bool ballInRange;

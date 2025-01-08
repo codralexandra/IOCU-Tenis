@@ -8,7 +8,7 @@ public class Ball : MonoBehaviour
     public string winner;
     int playerScore;
     int botScore;
-    int maxScore = 10;
+    int maxScore = 5;
     [SerializeField] public TextMeshProUGUI playerScoreText;
     [SerializeField] public TextMeshProUGUI botScoreText;
     [SerializeField] public ParticleSystem particleSystem1;
@@ -104,7 +104,7 @@ public class Ball : MonoBehaviour
                     Debug.Log("Point to player. Bot hit net.");
                 }
                 playing = false;
-                TriggerConfettiParticles();
+                //TriggerConfettiParticles();
                 UpdateScores();
             }
         }
@@ -140,7 +140,7 @@ public class Ball : MonoBehaviour
             hitBotTerrain = false;
             hitPlayerTerrain = false;
             playing = false;
-            TriggerConfettiParticles();
+            //TriggerConfettiParticles();
             UpdateScores();
         }
     }
@@ -149,6 +149,7 @@ public class Ball : MonoBehaviour
     {
         playerScoreText.text = playerScore.ToString();
         botScoreText.text = botScore.ToString();
+        TriggerConfettiParticles();
         currentServer = winner;
         Debug.Log("Scores updated!");
         if(playerScore == maxScore || botScore == maxScore)

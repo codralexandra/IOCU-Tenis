@@ -12,6 +12,9 @@ public class PauseMenu : MonoBehaviour
 
     private AudioManager audioManager;
 
+    public GameObject controlsMenuUI;
+
+
     private void Start()
     {
         audioManager = Object.FindFirstObjectByType<AudioManager>();
@@ -64,6 +67,17 @@ public class PauseMenu : MonoBehaviour
     {
         Debug.Log("Quitting game...");
         Application.Quit();
+    }
+
+    public void ControlsMenu()
+    {
+        controlsMenuUI.SetActive(true);
+        pauseMenuUI.SetActive(false);
+    }
+    public void CloseControlsMenu()
+    {
+        controlsMenuUI.SetActive(false);
+        pauseMenuUI.SetActive(true);
     }
 
     void SetMusicVolume(float volume)
