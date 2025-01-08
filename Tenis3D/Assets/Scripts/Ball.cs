@@ -14,7 +14,7 @@ public class Ball : MonoBehaviour
     [SerializeField] public ParticleSystem particleSystem1;
     [SerializeField] public ParticleSystem particleSystem2;
     [SerializeField] public string currentServer = "player"; // "player" or "bot"
-    private TrailRenderer trailRenderer; // Reference to the trail renderer
+    private TrailRenderer trailRenderer; 
     public bool playing = true;
 
     public bool hitPlayerTerrain = false;
@@ -27,6 +27,8 @@ public class Ball : MonoBehaviour
         playerScore = 0;
         botScore = 0;
         trailRenderer = GetComponent<TrailRenderer>();
+        Time.timeScale = 1f;
+
     }
 
     public void TriggerConfettiParticles()
@@ -37,25 +39,13 @@ public class Ball : MonoBehaviour
 
     private void OnCollisionEnter(Collision collision)
     {
-        // Check for terrain hits first
-        if (collision.transform.CompareTag("PlayerTerrain"))
-        {
-            hitPlayerTerrain = true;
-            Debug.Log("Ball hit player terrain");
-        }
-        else if (collision.transform.CompareTag("BotTerrain"))
-        {
-            hitBotTerrain = true;
-            Debug.Log("Ball hit bot terrain");
-        }
         // Wall hits
-        else if (collision.transform.CompareTag("Wall"))
+        if (collision.transform.CompareTag("Wall"))
         {
             Debug.Log("Ball hit wall. Await reset");
             ResetBall();
             if (playing)
             {
-                // Award point to hitter if ball hit the correct terrain first
                 if (hitter == "player" && hitBotTerrain)
                 {
                     playerScore++;
@@ -68,7 +58,6 @@ public class Ball : MonoBehaviour
                     winner = hitter;
                     Debug.Log("Point to bot. Player missed shot.");
                 }
-                // If ball didn't hit correct terrain, point goes to opponent
                 else if (hitter == "player" && !hitBotTerrain)
                 {
                     botScore++;
@@ -104,45 +93,25 @@ public class Ball : MonoBehaviour
                     Debug.Log("Point to player. Bot hit net.");
                 }
                 playing = false;
-                //TriggerConfettiParticles();
                 UpdateScores();
             }
         }
-        else if (collision.transform.CompareTag("Out"))
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.CompareTag("PlayerTerrain"))
         {
-            Debug.Log("Ball hit outside the playing field.");
-            // Award point to hitter if ball hit the correct terrain first
-            if (hitter == "player" && hitBotTerrain)
-            {
-                playerScore++;
-                winner = hitter;
-                Debug.Log("Point to player. Bot didnt catch.");
-            }
-            else if (hitter == "bot" && hitPlayerTerrain)
-            {
-                botScore++;
-                winner = hitter;
-                Debug.Log("Point to bot. Player didnt catch.");
-            }
-            // If ball didn't hit correct terrain, point goes to opponent
-            else if (hitter == "player" && !hitBotTerrain)
-            {
-                botScore++;
-                winner = "bot";
-                Debug.Log("Point to bot. Player hit out.");
-            }
-            else if (hitter == "bot" && !hitPlayerTerrain)
-            {
-                playerScore++;
-                winner = "player";
-                Debug.Log("Point to player. Bot hit out.");
-            }
-            hitBotTerrain = false;
-            hitPlayerTerrain = false;
-            playing = false;
-            //TriggerConfettiParticles();
-            UpdateScores();
+            hitPlayerTerrain = true;
+            Debug.Log("Ball hit player terrain");
         }
+        else if (other.CompareTag("BotTerrain"))
+        {
+            hitBotTerrain = true;
+            Debug.Log("Ball hit bot terrain");
+        }
+        
+        
     }
 
     private void UpdateScores()
@@ -157,12 +126,13 @@ public class Ball : MonoBehaviour
             GameObject.Find("Player").GetComponent<PlayerController>().isGameOn = false;
             endMenuUI.SetActive(true);
             Debug.Log("Game ended");
+            Time.timeScale = 0f;
         }
     }
 
     private void ResetBall()
     {
-        // Disable trail before resetting position
+  
 
         GetComponent<Rigidbody>().linearVelocity = Vector3.zero;
         GetComponent<Rigidbody>().angularVelocity = Vector3.zero;
@@ -176,11 +146,10 @@ public class Ball : MonoBehaviour
         trailRenderer.enabled = false;
         trailRenderer.Clear();
 
-        // Different offset for bot vs player
         Vector3 offset = isBot ? new Vector3(-0.5f, 1, 0) : new Vector3(0.2f, 1, 0);
         transform.position = serverPosition + offset;
 
-        // Re-enable trail after positioning
+
         trailRenderer.enabled = true;
     }
 

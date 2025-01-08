@@ -91,6 +91,7 @@ public class Bot : MonoBehaviour
         ballScript.playing = true;
 
         isServing = false;
+        Debug.Log("bot SERVED");
     }
     Vector3 PickTarget()
     {
